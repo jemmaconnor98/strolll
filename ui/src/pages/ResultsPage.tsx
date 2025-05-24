@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Typography, List, ListItem, ListItemText} from "@mui/material";
+import {Typography, Stack, Card, CardContent, Chip} from "@mui/material";
 
 interface Result {
   id: number;
@@ -22,18 +22,26 @@ const ResultsPage: React.FC = () => {
       <Typography variant="h4" gutterBottom>
         Session Results
       </Typography>
-      <List>
+      <Stack spacing={2}>
         {results.map((r) => (
-          <ListItem key={r.id} divider>
-            <ListItemText
-              primary={`${r.patientName} - ${r.exercise}`}
-              secondary={`Score: ${r.score} | Date: ${new Date(
-                r.date
-              ).toLocaleString()}`}
-            />
-          </ListItem>
+          <Card key={r.id} variant="outlined">
+            <CardContent>
+              <Typography variant="h6" component="div">
+                {r.patientName} - {r.exercise}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
+                Date: {new Date(r.date).toLocaleDateString()}
+              </Typography>
+              <Chip
+                label={`Score: ${r.score}`}
+                color={r.score >= 70 ? "success" : "warning"}
+                size="medium"
+                sx={{fontWeight: "bold"}}
+              />
+            </CardContent>
+          </Card>
         ))}
-      </List>
+      </Stack>
     </>
   );
 };

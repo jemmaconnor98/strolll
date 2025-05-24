@@ -4,22 +4,25 @@ import {
   TextField,
   Button,
   Typography,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
+  Card,
+  CardContent,
+  Box,
+  Chip,
 } from "@mui/material";
 
 interface Prescription {
   id: number;
-  patientName: string;
+  patientFirstName: string;
+  PatientLastName: string;
   exercises: string[];
   datePrescribed: string;
 }
 
 const PrescriptionsPage: React.FC = () => {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [patientName, setPatientName] = useState("");
+  const [patientFirstName, setPatientFirstName] = useState("");
+  const [patientLastName, setPatientLastName] = useState("");
   const [exercises, setExercises] = useState("");
 
   useEffect(() => {
@@ -43,17 +46,20 @@ const PrescriptionsPage: React.FC = () => {
   const handleSubmit = () => {
     axios
       .post<Prescription>("/api/prescription", {
-        patientName,
+        patientFirstName,
+        patientLastName,
         exercises: exercises.split(",").map((e) => e.trim()),
       })
       .then((res) => {
         setPrescriptions([...prescriptions, res.data]);
-        setPatientName("");
+        setPatientFirstName("");
+        setPatientLastName("");
         setExercises("");
       });
   };
 
-  const isSubmitDisabled = !patientName.trim() || !exercises.trim();
+  const isSubmitDisabled =
+    !patientFirstName.trim() || !patientLastName.trim() || !exercises.trim();
 
   return (
     <>
@@ -63,9 +69,16 @@ const PrescriptionsPage: React.FC = () => {
       <Stack spacing={2} direction="column" maxWidth={400}>
         <TextField
           required
-          label="Patient Name"
-          value={patientName}
-          onChange={(e) => setPatientName(e.target.value)}
+          label="Patient First Name"
+          value={patientFirstName}
+          onChange={(e) => setPatientFirstName(e.target.value)}
+          fullWidth
+        />
+        <TextField
+          required
+          label="Patient Last Name"
+          value={patientLastName}
+          onChange={(e) => setPatientLastName(e.target.value)}
           fullWidth
         />
         <TextField
@@ -84,19 +97,51 @@ const PrescriptionsPage: React.FC = () => {
         </Button>
       </Stack>
 
-      <Typography variant="h5" sx={{mt: 4}}>
+      <Typography variant="h5" sx={{mt: 4, mb: 2}}>
         Existing Prescriptions
       </Typography>
-      <List>
-        {prescriptions.map((p) => (
-          <ListItem key={p.id} divider>
-            <ListItemText
-              primary={`${p.patientName}`}
-              secondary={`Exercises: ${p.exercises.join(", ")}`}
-            />
-          </ListItem>
-        ))}
-      </List>
+      <Stack spacing={2}>
+        {prescriptions.length === 0 ? (
+          <Typography variant="body1" color="text.secondary">
+            No prescriptions found. Add one above!
+          </Typography>
+        ) : (
+          prescriptions.map((p) => (
+            <Card
+              key={p.id}
+              variant="outlined"
+              sx={{width: "100%", maxWidth: 600}}
+            >
+              {" "}
+              <CardContent>
+                <Typography variant="h6" component="div">
+                  {p.patientFirstName} {p.PatientLastName}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{mb: 1}}>
+                  Date Prescribed:{" "}
+                  {new Date(p.datePrescribed).toLocaleDateString()}
+                </Typography>
+                <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
+                  {p.exercises.length === 0 ? (
+                    <Typography variant="body2" color="text.secondary">
+                      No exercises prescribed.
+                    </Typography>
+                  ) : (
+                    p.exercises.map((exercise, index) => (
+                      <Chip
+                        key={index}
+                        label={exercise}
+                        variant="filled"
+                        color="primary"
+                      />
+                    ))
+                  )}
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </Stack>
     </>
   );
 };

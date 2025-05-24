@@ -17,7 +17,5 @@ var app = builder.Build();
 
 // Use CORS
 app.UseCors();
-
 app.MapControllers();
-
 app.Run();
