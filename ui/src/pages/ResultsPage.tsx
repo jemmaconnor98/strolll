@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {Typography, Stack, Card, CardContent, Chip} from "@mui/material";
+import {Typography, Stack, Card, CardContent, Chip, Box} from "@mui/material";
 
 interface Result {
   id: number;
@@ -18,13 +18,32 @@ const ResultsPage: React.FC = () => {
   }, []);
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        maxWidth: 800,
+        mx: "auto",
+        mt: 4,
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Session Results
       </Typography>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{width: "100%"}}>
         {results.map((r) => (
-          <Card key={r.id} variant="outlined">
+          <Card
+            key={r.id}
+            variant="outlined"
+            sx={{
+              width: "100%",
+              boxShadow: 2,
+              borderRadius: 2,
+            }}
+          >
             <CardContent>
               <Typography variant="h6" component="div">
                 {r.patientName} - {r.exercise}
@@ -42,7 +61,7 @@ const ResultsPage: React.FC = () => {
           </Card>
         ))}
       </Stack>
-    </>
+    </Box>
   );
 };
 

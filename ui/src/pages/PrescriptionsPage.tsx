@@ -62,25 +62,38 @@ const PrescriptionsPage: React.FC = () => {
     !patientFirstName.trim() || !patientLastName.trim() || !exercises.trim();
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        maxWidth: 600,
+        mx: "auto",
+        mt: 4,
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Prescribe Exercises
       </Typography>
-      <Stack spacing={2} direction="column" maxWidth={400}>
-        <TextField
-          required
-          label="Patient First Name"
-          value={patientFirstName}
-          onChange={(e) => setPatientFirstName(e.target.value)}
-          fullWidth
-        />
-        <TextField
-          required
-          label="Patient Last Name"
-          value={patientLastName}
-          onChange={(e) => setPatientLastName(e.target.value)}
-          fullWidth
-        />
+      <Stack spacing={2} sx={{width: "100%"}}>
+        <Box sx={{display: "flex", gap: 2}}>
+          <TextField
+            required
+            label="Patient First Name"
+            value={patientFirstName}
+            onChange={(e) => setPatientFirstName(e.target.value)}
+            fullWidth
+          />
+          <TextField
+            required
+            label="Patient Last Name"
+            value={patientLastName}
+            onChange={(e) => setPatientLastName(e.target.value)}
+            fullWidth
+          />
+        </Box>
         <TextField
           required
           label="Exercises (comma-separated)"
@@ -100,7 +113,7 @@ const PrescriptionsPage: React.FC = () => {
       <Typography variant="h5" sx={{mt: 4, mb: 2}}>
         Existing Prescriptions
       </Typography>
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{width: "100%"}}>
         {prescriptions.length === 0 ? (
           <Typography variant="body1" color="text.secondary">
             No prescriptions found. Add one above!
@@ -110,9 +123,12 @@ const PrescriptionsPage: React.FC = () => {
             <Card
               key={p.id}
               variant="outlined"
-              sx={{width: "100%", maxWidth: 600}}
+              sx={{
+                width: "100%",
+                boxShadow: 2,
+                borderRadius: 2,
+              }}
             >
-              {" "}
               <CardContent>
                 <Typography variant="h6" component="div">
                   {p.patientFirstName} {p.PatientLastName}
@@ -142,7 +158,7 @@ const PrescriptionsPage: React.FC = () => {
           ))
         )}
       </Stack>
-    </>
+    </Box>
   );
 };
 
